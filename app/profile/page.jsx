@@ -20,13 +20,13 @@ function MyProfile() {
 
   useEffect(() => {
     if (session?.user.id) fetchPosts();
-  }, []);
+  }, [session?.user.id]);
 
   return (
     <Profile
       name="My"
       desc="Welcome to your personalized profile page"
-      data={[]}
+      data={posts}
       handleEdit={handleEdit}
       handleDelete={handleDelete}
     />
