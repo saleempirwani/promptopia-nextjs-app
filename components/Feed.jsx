@@ -17,9 +17,32 @@ const PromptCardList = ({ data, handleTagClick }) => {
 const Feed = () => {
   const [searchText, setSearchText] = useState("");
   const [posts, setPosts] = useState([]);
+  const [filteredPost, setFilteredPost] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchTimeout, setSearchTimeout] = useState(0);
 
-  const handleSearch = () => {};
+  const filteredPrompt = (searchText = "") => {
+    const regex = new RegExp(searchText, "i");
+
+    return posts.filter(
+      (post) =>
+        regex.test(post.creator.username) ||
+        regex.test(post.tag) ||
+        regex.test(post.prompt)
+    );
+  };
+
+  // debounce method
+  const handleSearch = (text = "") => {
+    clearTimeout(searchTimeout);
+    setSearchText(text);
+
+    setSearchTimeout(
+      setTimeout(() => {
+        setFilteredPost(filteredPrompt(text));
+      }, 500)
+    );
+  };
 
   const fetchPosts = async () => {
     setLoading(true);
@@ -28,6 +51,7 @@ const Feed = () => {
       const response = await fetch("api/prompt");
       const data = await response.json();
       setPosts(data);
+      setFilteredPost(data);
     } catch (error) {
       console.log("ERR [fetchPosts] =====> ", error);
     } finally {
@@ -47,7 +71,7 @@ const Feed = () => {
           type="text"
           placeholder="Search for a tag or a username"
           value={searchText}
-          onChange={handleSearch}
+          onChange={(e) => handleSearch(e.target.value)}
           className="search_input peer"
         />
       </form>
@@ -57,7 +81,7 @@ const Feed = () => {
           <Loader />
         </div>
       ) : (
-        <PromptCardList data={posts} handleTagClick={() => {}} />
+        <PromptCardList data={filteredPost} handleTagClick={() => {}} />
       )}
     </section>
   );
