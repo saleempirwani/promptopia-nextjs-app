@@ -1,9 +1,10 @@
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
+  const router = useRouter();
   const { data: session } = useSession();
   const pathname = usePathname();
 
@@ -17,6 +18,10 @@ const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
     }, 3000);
   };
 
+  const onProfile = () => {
+    router.push("/profile");
+  };
+
   return (
     <div className="prompt_card">
       <div className="flex justify-between items-start gap-52">
@@ -27,13 +32,17 @@ const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
             width={40}
             height={40}
             className="rounded-full object-contain"
+            onClick={onProfile}
           />
           <div className="flex flex-col">
-            <h3 className="font-satoshi font-semibold text-gray-900">
+            <h3
+              className="font-satoshi font-semibold text-gray-900"
+              onClick={onProfile}
+            >
               {post.creator?.username}
             </h3>
 
-            <p className="font-inter text-sm text-gray-500">
+            <p className="font-inter text-sm text-gray-500" onClick={onProfile}>
               {post.creator?.email}
             </p>
           </div>
