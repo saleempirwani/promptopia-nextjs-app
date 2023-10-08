@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import PromptCard from "./PromptCard";
 import Loader from "./Loader";
+import Chips from "./Chips";
 
 const Feed = () => {
   const [searchText, setSearchText] = useState("");
@@ -10,6 +11,7 @@ const Feed = () => {
   const [filteredPosts, setFilteredPost] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchTimeout, setSearchTimeout] = useState(0);
+  const [tag, setTag] = useState();
 
   const filteredPrompt = (searchText = "") => {
     const regex = new RegExp(searchText, "i");
@@ -35,7 +37,13 @@ const Feed = () => {
   };
 
   const handleTagClick = (text) => {
+    setTag(text);
     setFilteredPost(filteredPrompt(text));
+  };
+
+  const onCancelTag = () => {
+    setFilteredPost(posts);
+    setTag("");
   };
 
   const fetchPosts = async () => {
@@ -69,6 +77,12 @@ const Feed = () => {
           className="search_input peer"
         />
       </form>
+
+      {!!tag && (
+        <div className="mt-3">
+          <Chips title={tag} onCancel={onCancelTag} />
+        </div>
+      )}
 
       {loading ? (
         <div className="mt-16">
