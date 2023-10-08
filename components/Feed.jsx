@@ -4,20 +4,10 @@ import { useEffect, useState } from "react";
 import PromptCard from "./PromptCard";
 import Loader from "./Loader";
 
-const PromptCardList = ({ data, handleTagClick }) => {
-  return (
-    <div className="mt-16 prompt_layout">
-      {data.map((post, index) => (
-        <PromptCard key={index} post={post} handleTagClick={handleTagClick} />
-      ))}
-    </div>
-  );
-};
-
 const Feed = () => {
   const [searchText, setSearchText] = useState("");
   const [posts, setPosts] = useState([]);
-  const [filteredPost, setFilteredPost] = useState([]);
+  const [filteredPosts, setFilteredPost] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchTimeout, setSearchTimeout] = useState(0);
 
@@ -42,6 +32,10 @@ const Feed = () => {
         setFilteredPost(filteredPrompt(text));
       }, 500)
     );
+  };
+
+  const handleTagClick = (text) => {
+    setFilteredPost(filteredPrompt(text));
   };
 
   const fetchPosts = async () => {
@@ -77,11 +71,19 @@ const Feed = () => {
       </form>
 
       {loading ? (
-        <div className="mt-10">
+        <div className="mt-16">
           <Loader />
         </div>
       ) : (
-        <PromptCardList data={filteredPost} handleTagClick={() => {}} />
+        <div className="mt-16 prompt_layout">
+          {filteredPosts.map((post, index) => (
+            <PromptCard
+              key={index}
+              post={post}
+              handleTagClick={() => handleTagClick(post.tag)}
+            />
+          ))}
+        </div>
       )}
     </section>
   );
