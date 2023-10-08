@@ -19,7 +19,9 @@ const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
   };
 
   const onProfile = () => {
-    router.push("/profile");
+    router.push(
+      `/profile?id=${post.creator?._id}&name=${post.creator?.username}`
+    );
   };
 
   return (
