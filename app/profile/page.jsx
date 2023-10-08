@@ -12,7 +12,7 @@ function MyProfile() {
   const [posts, setPosts] = useState([]);
 
   const handleEdit = (post) => {
-    router.push(`update-prompt?${post._id}`);
+    router.push(`update-prompt?id=${post._id}`);
   };
 
   const handleDelete = () => {};
